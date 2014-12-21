@@ -27,7 +27,7 @@ public class PingVerticle extends Verticle {
         container.deployModule("io.vertx~mod-mongo-persistor~2.1.1", appConfig.getObject("mongo-persistor"));
 
         final RxEventBus rxEventBus = new RxEventBus(vertx.eventBus());
-        
+
         // setup Routematcher
         RouteMatcher matcher = new RouteMatcher();
 
@@ -98,7 +98,7 @@ public class PingVerticle extends Verticle {
                     @Override
                     public void handle(Buffer event) {
                         // normally we'd validate the input, for now just assume it is correct.
-                        final String body = event.getString(0,event.length());
+                        final String body = event.getString(0, event.length());
 
                         // create the query
                         JsonObject newObject = new JsonObject(body);
@@ -107,8 +107,8 @@ public class PingVerticle extends Verticle {
                                 .putString("action", "update")
                                 .putObject("criteria", matcher)
                                 .putBoolean("upsert", false)
-                                .putBoolean("multi",false)
-                                .putObject("objNew",newObject);
+                                .putBoolean("multi", false)
+                                .putObject("objNew", newObject);
 
                         // and call the event we want to use
                         vertx.eventBus().send("mongodb-persistor", json, new Handler<Message<JsonObject>>() {
